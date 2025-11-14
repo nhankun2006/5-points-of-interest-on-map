@@ -1,2 +1,16 @@
-# 5-points-of-interest-on-map
-Create a website that allows users to enter a location name in Vietnam, then displays 5 points of interest on a map.
+# location
+
+### Overview
+
+loaction is a web application that allows users to search for exact location in their vicinity. It provides an intuitive interface to find  spots based on user location.
+
+The application is built using React and OpenStreetMap API for location services.
+
+### Development
+
+Command to run the project:
+
+```
+npm install
+npm run dev
+```
