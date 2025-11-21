@@ -12,5 +12,6 @@ Command to run the project:
 
 ```
 npm install
+npm install - save leaflet react-leaflet @types/leaflet
 npm run dev
 ```
