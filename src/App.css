@@ -21,7 +21,7 @@
 
 .search-container {
   position: absolute;
-  top: 20px;
+  top: 70px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1001;
@@ -70,11 +70,11 @@
 /* Locate button (floating) */
 .locate-btn {
   position: absolute;
-  top: 90px;
-  left: 20px;
+  top: 135px;
+  left: 10px;
   z-index: 1100;
-  width: 44px;
-  height: 44px;
+  width: 35px;
+  height: 40px;
   border-radius: 10px;
   border: none;
   background: white;
@@ -90,11 +90,54 @@
   transform: translateY(-2px);
 }
 
+/* Translator button (floating) */
+.translator-toggle-btn {
+  position: absolute;
+  top: 185px;
+  left: 10px;
+  z-index: 1100;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: #2a2a2a;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.2s;
+}
+
+.translator-toggle-btn img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.translator-toggle-btn:hover {
+  background: #1a1a1a;
+  transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
   .locate-btn {
     left: 12px;
     top: 12px;
     width: 40px;
     height: 40px;
+  }
+
+  .translator-toggle-btn {
+    top: 65px;
+    left: 12px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .translator-toggle-btn img {
+    width: 18px;
+    height: 18px;
   }
 }

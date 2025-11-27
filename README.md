@@ -15,3 +15,8 @@ npm install
 npm install - save leaflet react-leaflet @types/leaflet
 npm run dev
 ```
+
+### If you want to host it on network
+```
+npm run dev:host -- --port 5173
+```

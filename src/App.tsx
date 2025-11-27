@@ -3,6 +3,7 @@ import { LatLng } from "leaflet";
 import Map from "./Map";
 import SearchBar from "./SearchBar";
 import Weather from "./components/Weather";
+import Translator from "./components/Translator";
 import "./App.css";
 
 import type { LatLngExpression } from "leaflet";
@@ -42,6 +43,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>(""); // ADD THIS
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
+  const [showTranslator, setShowTranslator] = useState(false);
 
   // Effect to get GPS location on load
   useEffect(() => {
@@ -94,17 +96,27 @@ function App() {
     // Vietnam bounding box: [south, west, north, east]
     const vietnamBbox = "8.5,102.0,23.5,109.5";
 
+    // Helper: decode a few common HTML entities (in case input was encoded)
+    const decodeEntities = (s: string) =>
+      s.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+
+    // Escape user input so it is safe inside Overpass / regex
+    const escapeForOverpass = (s: string) => {
+      const decoded = decodeEntities(s);
+      // escape regex-special characters and quotes/backslashes
+      return decoded.replace(/[.*+?^${}()|[\]\\"]/g, '\\$&').replace(/\n/g, ' ').trim();
+    };
+
     // Build Overpass query. If a free-text query is provided, search names;
     // otherwise search common food/coffee tags (restaurant, cafe, fast_food, shop=coffee, bakery, bar).
     let overpassQuery = `[out:json][bbox:${vietnamBbox}];(`;
 
     if (query.trim()) {
-      // Escape quotes and backslashes to avoid producing invalid Overpass regex
-      const safeQuery = query.replace(/\\/g, "\\\\").replace(/\"/g, '\\\"').replace(/\n/g, ' ').trim();
+      const safeQuery = escapeForOverpass(query);
       overpassQuery += `
-        node["name"~"${safeQuery}","i"](around:${radius},${lat},${lng});
-        way["name"~"${safeQuery}","i"](around:${radius},${lat},${lng});
-        relation["name"~"${safeQuery}","i"](around:${radius},${lat},${lng});
+        node["name"~"${safeQuery}",i](around:${radius},${lat},${lng});
+        way["name"~"${safeQuery}",i](around:${radius},${lat},${lng});
+        relation["name"~"${safeQuery}",i](around:${radius},${lat},${lng});
       `;
     } else {
       // Food / coffee related tags
@@ -147,6 +159,12 @@ function App() {
         },
         body: overpassQuery,
       });
+      // If Overpass returns an error page it will not be JSON — handle that and log body.
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Overpass API error (status ' + response.status + '):', text);
+        throw new Error('Overpass API error: ' + response.status);
+      }
       const data = await response.json();
 
       if (!data.elements) {
@@ -242,6 +260,14 @@ function App() {
       >
         📍
       </button>
+      <button
+        className="translator-toggle-btn"
+        onClick={() => setShowTranslator(true)}
+        title="Open Translator"
+        aria-label="Open Translator"
+      >
+        <img src="/translate.png" alt="Translator" />
+      </button>
       <div className="main-content">
         <Map
           searchCenter={searchCenter}
@@ -253,6 +279,7 @@ function App() {
         />
         <Weather weather={weather} isLoading={weatherLoading} />
       </div>
+      {showTranslator && <Translator onClose={() => setShowTranslator(false)} />}
     </div>
   );
 }
