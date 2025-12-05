@@ -4,6 +4,8 @@ import Map from "./Map";
 import SearchBar from "./SearchBar";
 import Weather from "./components/Weather";
 import Translator from "./components/Translator";
+import LoginRegister from "./components/LoginRegister";
+import { useAuth } from "./contexts/AuthContext";
 import "./App.css";
 
 import type { LatLngExpression } from "leaflet";
@@ -32,6 +34,7 @@ interface OverpassElement {
 }
 
 function App() {
+  const { user, loading: authLoading, logout } = useAuth();
   const defaultPosition: LatLngExpression = [10.7769, 106.7009]; // HCMC
 
   // All the state now lives in App.tsx
@@ -248,6 +251,15 @@ function App() {
     setRouteDestination(new LatLng(location.lat, location.lon));
   };
 
+  // Nếu đang tải auth hoặc chưa đăng nhập, hiển thị LoginRegister
+  if (authLoading) {
+    return <div className="loading">Đang tải...</div>;
+  }
+
+  if (!user) {
+    return <LoginRegister />;
+  }
+
   return (
     <div className="App">
       <SearchBar onSearch={handleSearch} isLoading={isLoading} />
@@ -267,6 +279,17 @@ function App() {
         aria-label="Open Translator"
       >
         <img src="/translate.png" alt="Translator" />
+      </button>
+      {/* Nút logout */}
+      <button
+        className="logout-btn"
+        onClick={async () => {
+          await logout();
+        }}
+        title="Logout"
+        aria-label="Logout"
+      >
+        Log out
       </button>
       <div className="main-content">
         <Map
