@@ -107,3 +107,54 @@
     transform: scale(1);
   }
 }
+
+.translator-config {
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.config-toggle {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.config-toggle:hover {
+  text-decoration: underline;
+  color: #333;
+}
+
+.config-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.config-input-container label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #444;
+}
+
+.config-input-container input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.config-input-container small {
+  color: #666;
+  font-size: 0.75rem;
+}
+
